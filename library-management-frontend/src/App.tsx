@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from './components';
-import { Home } from './pages';
+import { BookDetails, Books, Home, UserDetails, Users } from './pages';
 
 const router = createBrowserRouter([
   {
@@ -16,22 +16,22 @@ const router = createBrowserRouter([
       {
         id: 'books',
         path: '/books',
-        element: <div>Books</div>,
+        element: <Books />,
       },
       {
         id: 'users',
         path: '/users',
-        element: <div>Users</div>,
+        element: <Users />,
       },
       {
         id: 'book-details',
         path: '/books/:id',
-        element: <div>BookDetails</div>,
+        element: <BookDetails />,
       },
       {
         id: 'user-details',
         path: '/users/:id',
-        element: <div>UserDetails</div>,
+        element: <UserDetails />,
       },
     ],
   },
