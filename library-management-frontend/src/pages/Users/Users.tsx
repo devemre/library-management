@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import User from '../../types/User';
 import axiosInstance from '../../config/axiosConfig';
-import { Link } from 'react-router-dom';
+import Card from '../../components/Card';
+import { Button } from '../../components';
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,24 +14,18 @@ const Users = () => {
   }, []);
 
   return (
-    <div className='p-4'>
+    <div className='p-4 bg-slate-500 flex flex-col gap-4 rounded-md'>
+      <div className='flex justify-center'>
+        <h1 className='text-2xl font-bold text-white'>Users</h1>
+      </div>
+      <Button name='Add User' />
       <div className='grid gap-4 grid-cols-1 md:grid-cols-3 xl:grid-cols-4'>
         {users.map((user) => (
-          <div
-            className='shadow-sm rounded-md p-2 flex flex-col gap-1 bg-slate-100 hover:bg-slate-200 transition-all'
+          <Card
             key={user.id}
-            title={user.name}
-            role='alert'
-          >
-            <p className=''>{user.name}</p>
-            <hr className='border-slate-700' />
-            <Link
-              to={`/users/${user.id}`}
-              className='rounded-md flex items-center justify-center p-1 bg-slate-700 text-white active:bg-slate-600 transition-all'
-            >
-              <p className=''>Details</p>
-            </Link>
-          </div>
+            name={user.name}
+            detailsLink={`/users/${user.id}`}
+          />
         ))}
       </div>
     </div>

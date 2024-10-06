@@ -3,8 +3,18 @@ const Book = require('../models/book');
 const Borrow = require('../models/borrow');
 
 const getAllBooks = async (req, res) => {
+  const attributes = ['id', 'name'];
+  const { includeAuthor, includeYear } = req.query;
+
+  if (includeAuthor === 'true') {
+    attributes.push('author');
+  }
+  if (includeYear === 'true') {
+    attributes.push('year');
+  }
+
   try {
-    const books = await Book.findAll();
+    const books = await Book.findAll({ attributes });
     res.status(200).json(books);
   } catch (err) {
     res.status(500).json(err.message);
@@ -13,6 +23,7 @@ const getAllBooks = async (req, res) => {
 
 const getBookWithAverageScore = async (req, res) => {
   const bookId = req.params.id;
+  const { includeAuthor, includeYear } = req.query;
 
   try {
     const book = await Book.findByPk(bookId);
@@ -29,14 +40,24 @@ const getBookWithAverageScore = async (req, res) => {
       raw: true,
     });
 
-    res.status(200).json({
+    const response = {
       id: book.id,
       name: book.name,
       score:
         avgScore && avgScore.avgScore !== null
           ? parseFloat(avgScore.avgScore).toFixed(2)
           : -1,
-    });
+    };
+
+    if (includeAuthor === 'true') {
+      response.author = book.author;
+    }
+
+    if (includeYear === 'true') {
+      response.year = book.year;
+    }
+
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json(err.message);
   }

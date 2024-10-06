@@ -8,6 +8,8 @@ CREATE TABLE users (
 
 CREATE TABLE books (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  author VARCHAR(255),
+  year INT,
   name VARCHAR(255)
 );
 
@@ -23,5 +25,12 @@ CREATE TABLE borrows (
 
 -- Example initial data from given Postman collection
 INSERT INTO users (name) VALUES ("Eray Aslan"), ("Enes Faruk Meniz"), ("Sefa Eren Şahin"), ("Kadir Mutlu");
-INSERT INTO books (name) VALUES ("The Hitchhiker's Guide to the Galaxy"), ("I, Robot"), ("Dune"), ("1984"), ("Brave New World");
-
+INSERT INTO books (name, author, year) 
+VALUES 
+  ("The Hitchhiker's Guide to the Galaxy", "Douglas Adams", 1979),
+  ("I, Robot", "Isaac Asimov", 1950),
+  ("Dune", "Frank Herbert", 1965),
+  ("1984", "George Orwell", 1949),
+  ("Brave New World", "Aldous Huxley", 1932);
+  
+INSERT INTO books (name) VALUES ("Test");
