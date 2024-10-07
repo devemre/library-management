@@ -1,6 +1,7 @@
 const sequelize = require('../config/db');
 const Book = require('../models/book');
 const Borrow = require('../models/borrow');
+const User = require('../models/user');
 
 const getAllBooks = async (req, res) => {
   const attributes = ['id', 'name'];
@@ -23,7 +24,7 @@ const getAllBooks = async (req, res) => {
 
 const getBookWithAverageScore = async (req, res) => {
   const bookId = req.params.id;
-  const { includeAuthor, includeYear } = req.query;
+  const { includeAuthor, includeYear, includeCurrentOwner } = req.query;
 
   try {
     const book = await Book.findByPk(bookId);
@@ -33,12 +34,17 @@ const getBookWithAverageScore = async (req, res) => {
     }
 
     const avgScore = await Borrow.findOne({
-      attributes: [
-        [sequelize.fn('AVG', sequelize.col('score')), 'avgScore'], // Use sequelize correctly
-      ],
+      attributes: [[sequelize.fn('AVG', sequelize.col('score')), 'avgScore']],
       where: { book_id: bookId },
       raw: true,
     });
+
+    const currentBorrow = await Borrow.findOne({
+      where: { book_id: bookId, is_returned: false },
+      include: { model: User, attributes: ['id', 'name'] },
+    });
+
+    console.log(currentBorrow);
 
     const response = {
       id: book.id,
@@ -55,6 +61,10 @@ const getBookWithAverageScore = async (req, res) => {
 
     if (includeYear === 'true') {
       response.year = book.year;
+    }
+
+    if (includeCurrentOwner === 'true' && currentBorrow !== null) {
+      response.currentOwner = currentBorrow.User;
     }
 
     res.status(200).json(response);

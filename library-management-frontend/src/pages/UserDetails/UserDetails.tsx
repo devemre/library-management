@@ -96,17 +96,17 @@ const UserDetails = () => {
             {userDetails?.books?.present?.map((book) => (
               <div
                 key={book.id + ' ' + book.userScore}
-                className='grid grid-cols-2'
+                className='grid grid-cols-2 items-center py-1'
               >
                 <p key={book.id} className=''>
                   {book.name}
                 </p>
                 <form
-                  className='flex justify-between'
+                  className='flex flex-col justify-between md:flex-row gap-1 md:gap-2'
                   onSubmit={(e) => handleSubmit(e, book.id)}
                 >
                   <input
-                    className='rounded-md bg-slate-500 text-white w-[45%] px-2'
+                    className='rounded-md bg-slate-500 text-white md:w-[50%] px-2'
                     type='number'
                     placeholder='User Score'
                     value={scores[book.id] || ''}

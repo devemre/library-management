@@ -1,5 +1,80 @@
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../config/axiosConfig';
+import { Button } from '../../components';
+import Book from '../../types/Book';
+
 const BookDetails = () => {
-  return <div>BookDetails</div>;
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [bookDetails, setBookDetails] = useState<Book>();
+  const [updated, setUpdated] = useState(false);
+
+  useEffect(() => {
+    axiosInstance
+      .get(
+        `/books/${id}?includeAuthor=true&includeYear=true&includeCurrentOwner=true`
+      )
+      .then((res) => {
+        setBookDetails(res.data);
+        console.log(res.data);
+      });
+  }, [updated]);
+
+  return (
+    <div className='p-4'>
+      <div className='border rounded-md bg-slate-100 p-4 flex flex-col gap-2'>
+        <div className='flex justify-between items-start'>
+          <div>
+            <p>Name</p>
+            <p className='font-bold'>{bookDetails?.name}</p>
+          </div>
+          <div>
+            <Button
+              name='Back'
+              onClick={() =>
+                navigate('/books?includeAuthor=true&includeYear=true')
+              }
+            />
+          </div>
+        </div>
+        <div>
+          <p>Author</p>
+          <p className='font-bold'>
+            {bookDetails?.author ? bookDetails?.author : 'N/A'}
+          </p>
+        </div>
+        <div>
+          <p>Year</p>
+          <p className='font-bold'>
+            {bookDetails?.year ? bookDetails?.year : 'N/A'}
+          </p>
+        </div>
+        <div>
+          <p>Average Rating</p>
+          <p className='font-bold'>
+            {bookDetails?.score === -1 ? 'N/A' : bookDetails?.score}
+          </p>
+        </div>
+        <hr />
+        {bookDetails?.currentOwner ? (
+          <div>
+            <p>Current Owner</p>
+            <p className='font-bold'>{bookDetails.currentOwner.name}</p>
+          </div>
+        ) : (
+          <div>
+            <p>Current Owner</p>
+            <Button
+              name='Lend Book'
+              onClick={() => navigate(`/books/${id}/lend`)}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default BookDetails;
