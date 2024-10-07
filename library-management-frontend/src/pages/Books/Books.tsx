@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Book from '../../types/Book';
 import axiosInstance from '../../config/axiosConfig';
 import { Button, Card } from '../../components';
+import { useSelector } from 'react-redux';
+import { store } from '../../store';
+import { setBooks } from '../../store/slices/booksSlice';
 
 const Books = () => {
-  const [books, setBooks] = useState<Book[]>([]);
+  const books = useSelector((state: any) => state.books.books);
 
   useEffect(() => {
     axiosInstance
       .get('/books?includeAuthor=true&includeYear=true')
       .then((res) => {
-        setBooks(res.data);
+        store.dispatch(setBooks(res.data));
       });
   }, []);
 
@@ -21,7 +24,7 @@ const Books = () => {
       </div>
       <Button name='Add Book' />
       <div className='grid gap-4 grid-cols-1 md:grid-cols-3 xl:grid-cols-4'>
-        {books.map((book) => (
+        {books.map((book: Book) => (
           <Card
             key={book.id}
             name={book.name}

@@ -3,13 +3,16 @@ import User from '../../types/User';
 import axiosInstance from '../../config/axiosConfig';
 import Card from '../../components/Card';
 import { Button } from '../../components';
+import { useSelector } from 'react-redux';
+import { store } from '../../store';
+import { setUsers } from '../../store/slices/usersSlice';
 
 const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useSelector((state: any) => state.users.users);
 
   useEffect(() => {
     axiosInstance.get('/users').then((res) => {
-      setUsers(res.data);
+      store.dispatch(setUsers(res.data));
     });
   }, []);
 
@@ -20,13 +23,14 @@ const Users = () => {
       </div>
       <Button name='Add User' />
       <div className='grid gap-4 grid-cols-1 md:grid-cols-3 xl:grid-cols-4'>
-        {users.map((user) => (
-          <Card
-            key={user.id}
-            name={user.name}
-            detailsLink={`/users/${user.id}`}
-          />
-        ))}
+        {users &&
+          users.map((user: User) => (
+            <Card
+              key={user.id}
+              name={user.name}
+              detailsLink={`/users/${user.id}`}
+            />
+          ))}
       </div>
     </div>
   );

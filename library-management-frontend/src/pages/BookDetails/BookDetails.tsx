@@ -3,14 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../config/axiosConfig';
 import { Button } from '../../components';
 import Book from '../../types/Book';
+import { store } from '../../store';
+import { setBookId, setModalType } from '../../store/slices/modalSlice';
+import { useSelector } from 'react-redux';
+import { setBooks } from '../../store/slices/booksSlice';
 
 const BookDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [bookDetails, setBookDetails] = useState<Book>();
-  const [updated, setUpdated] = useState(false);
-
+  const bookLended = useSelector((state: any) => state.modal.bookLended);
+  const modalType = useSelector((state: any) => state.modal.type);
   useEffect(() => {
     axiosInstance
       .get(
@@ -18,9 +22,13 @@ const BookDetails = () => {
       )
       .then((res) => {
         setBookDetails(res.data);
-        console.log(res.data);
       });
-  }, [updated]);
+  }, [bookLended, modalType]);
+
+  const openLendModal = () => {
+    store.dispatch(setModalType('lendBook'));
+    store.dispatch(setBookId(id ? parseInt(id) : -1));
+  };
 
   return (
     <div className='p-4'>
@@ -66,10 +74,7 @@ const BookDetails = () => {
         ) : (
           <div>
             <p>Current Owner</p>
-            <Button
-              name='Lend Book'
-              onClick={() => navigate(`/books/${id}/lend`)}
-            />
+            <Button name='Lend Book' onClick={() => openLendModal()} />
           </div>
         )}
       </div>
