@@ -6,7 +6,6 @@ import Book from '../../types/Book';
 import { store } from '../../store';
 import { setBookId, setModalType } from '../../store/slices/modalSlice';
 import { useSelector } from 'react-redux';
-import { setBooks } from '../../store/slices/booksSlice';
 
 const BookDetails = () => {
   const { id } = useParams();

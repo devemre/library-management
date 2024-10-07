@@ -11,7 +11,6 @@ const Modal = () => {
   useEffect(() => {
     axiosInstance.get('/users').then((res) => {
       setUsers(res.data);
-      console.log(res.data);
     });
   }, []);
 
