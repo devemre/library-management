@@ -23,11 +23,11 @@ const Modal = () => {
 
   return (
     <div className='absolute top-0 left-0 bg-opacity-50 w-full h-full bg-slate-700 flex justify-center items-center'>
-      <div className='bg-red-100 w-[80%] h-[80%] rounded-md p-4 flex flex-col gap-2'>
+      <div className='bg-slate-100 w-[80%] h-[80%] rounded-md p-4 flex flex-col gap-2'>
         <div className='flex justify-end'>
           <div>
             <Button
-              name='X'
+              name='Close'
               onClick={() => {
                 store.dispatch(setModalType(''));
               }}
